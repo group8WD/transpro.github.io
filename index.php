@@ -14,94 +14,157 @@ if ($result->num_rows > 0) {
 $conn->close();
 ?>
 
-<?php include 'inc/header.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>TransPro</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: rgb(98, 97, 97);
-            font-family: Arial, sans-serif;
-        }
-        .nav-link {
-            color: #333 !important;
-        }
-        .transport-btn {
-            background-color: #d3d3d3;
-            border: none;
-            margin: 5px;
-            padding: 10px 20px;
-            border-radius: 8px;
-            box-shadow: 1px 1px 3px rgba(0,0,0,0.1);
-        }
-        .panel {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TransPro</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f3f3;
+      margin: 0;
+    }
+
+    header {
+      background-color: #ddd;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      font-weight: bold;
+      color: #333;
+    }
+
+    nav a.active {
+      background-color: #ccc;
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+
+    .user-icon {
+      width: 30px;
+      height: 30px;
+      background: gray;
+      border-radius: 50%;
+    }
+
+    .map-placeholder {
+      background: #ccc;
+      height: 200px;
+      margin: 20px auto;
+      width: 90%;
+      border: 2px solid #aaa;
+      border-radius: 5px;
+    }
+
+    .box {
+      background: #eaeaea;
+      padding: 20px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .transport-buttons button {
+      margin: 5px;
+      padding: 10px 20px;
+      border: none;
+      background: #ccc;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .alerts div {
+      background: #ddd;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .timestamp {
+      font-size: 12px;
+      color: gray;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand ms-3" href="#">
-    <img src="Group" style="height: 30px; vertical-align: middle;">
-    <strong>TransPro</strong>
-  </a>
+  <header>
+    <div class="logo">TransPro</div>
+    <nav>
+      <a class="active" href="#">Home</a>
+      <a href="#">Live Status</a>
+      <a href="#">Plan Trip</a>
+      <a href="#">Contacts</a>
+    </nav>
+    <div class="user-icon"></div>
+  </header>
 
-  <div class="collapse navbar-collapse">
-    <ul class="navbar-nav ms-auto me-3">
-      <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Live Status</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Plan Trip</a></li>
-      <li class="nav-item"><a class="nav-link" href="#">Contacts</a></li>
-    </ul>
+  <div class="container text-center py-4">
+    <h2>Plan Your Route</h2>
+    <form class="row justify-content-center g-2 my-3" method="get">
+      <div class="col-md-3">
+        <select name="from" class="form-select" required>
+          <option value="" disabled selected>From</option>
+          <?php foreach ($cities as $city): ?>
+            <option value="<?= htmlspecialchars($city) ?>"><?= htmlspecialchars($city) ?></option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select name="to" class="form-select" required>
+          <option value="" disabled selected>To</option>
+          <?php foreach ($cities as $city): ?>
+            <option value="<?= htmlspecialchars($city) ?>"><?= htmlspecialchars($city) ?></option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Get Directions</button>
+      </div>
+    </form>
+
+    <h2 class="mt-4">Live Map</h2>
+    <div class="map-placeholder"></div>
+
+    <div class="row justify-content-center g-4 mt-4">
+      <div class="col-md-4 d-flex justify-content-center">
+        <div class="box text-center">
+          <h3>Type of Transportation</h3>
+          <div class="transport-buttons">
+            <button>Bus</button>
+            <button>Jeepney</button><br/>
+            <button>Train</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 d-flex justify-content-center">
+        <div class="box text-start">
+          <h3>Traffic & Service Alerts</h3>
+          <div class="alerts">
+            <div>LRT Line 1: Service temporarily suspended between Baclaran and EDSA.</div>
+            <div>Jeepney Route 12 delayed due to traffic congestion in España.</div>
+            <div>MRT Line 3 running on time.</div>
+          </div>
+          <div class="timestamp">Updated 5mins ago</div>
+        </div>
+      </div>
+    </div>
   </div>
-</nav>
-
-<div class="container text-center mt-4">
-  <h4>Plan Your Route</h4>
-  <div class="row justify-content-center mt-2 mb-3">
-    <div class="col-md-3">
-      <select class="form-control" name="from">
-        <option disabled selected>Select City</option>
-        <?php foreach ($cities as $city): ?>
-            <option value="<?= $city ?>"><?= $city ?></option>
-        <?php endforeach; ?>
-      </select>
-    </div>
-    <div class="col-md-3">
-      <select class="form-control" name="to">
-        <option disabled selected>Select City</option>
-        <?php foreach ($cities as $city): ?>
-            <option value="<?= $city ?>"><?= $city ?></option>
-        <?php endforeach; ?>
-      </select>
-    </div>
-    <div class="col-md-2">
-      <button class="btn btn-outline-secondary w-100">Get Directions</button>
-    </div>
-  </div>
-
-  <h5 class="my-3">Live Map</h5>
-  <div class="panel mb-4" style="height: 200px;"></div>
-
-  <div class="row">
-    <div class="col-md-6 panel">
-      <h6>Type of Transportation</h6>
-      <button class="transport-btn">Bus</button>
-      <button class="transport-btn">Jeepney</button>
-      <button class="transport-btn">Train</button>
-    </div>
-    <div class="col-md-6 panel">
-      <h6>Traffic & Service Alerts</h6>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
